@@ -19,35 +19,12 @@ public class LineSocket{
     }
 
     public boolean connect(){
+        this.closer = false;
         try{
             this.sock = new Socket(host, port);
             this.bWriter = new BufferedWriter(new OutputStreamWriter(this.sock.getOutputStream()));
             this.iReader = new InputStreamReader(this.sock.getInputStream());
             this.bReader = new BufferedReader(this.iReader);
-            final LineSocket that = this;
-            if(handler != null) handler.onOpen();
-            new Thread(){
-                public void run(){
-                    while(!closer){
-                        try{
-                            String line = bReader.readLine();
-                            if(line != null){
-                                if(handler != null) handler.onMessage(line);
-                            }
-                            Thread.sleep(10);
-                        }
-                        catch(SocketException ex){
-                            that.close();
-                        }
-                        catch(IOException ex){
-                            that.close();
-                        }
-                        catch(Exception ex){
-                            that.close();
-                        }
-                    }
-                }
-            }.start();
         }
         catch(ConnectException ex){
             if(handler != null) handler.onClose();
@@ -58,6 +35,30 @@ public class LineSocket{
             if(handler != null) handler.onClose();
             return false;
         }
+        final LineSocket that = this;
+        new Thread(){
+            public void run(){
+                while(!closer){
+                    try{
+                        String line = bReader.readLine();
+                        if(line != null){
+                            if(handler != null) handler.onMessage(line);
+                        }
+                        Thread.sleep(10);
+                    }
+                    catch(SocketException ex){
+                        that.close();
+                    }
+                    catch(IOException ex){
+                        that.close();
+                    }
+                    catch(Exception ex){
+                        that.close();
+                    }
+                }
+            }
+        }.start();
+        if(handler != null) handler.onOpen();
         return true;
     }
 
@@ -75,14 +76,17 @@ public class LineSocket{
         }
     }
     
-    public void send(String line) throws Exception{
+    public boolean send(String line){
         try{
             bWriter.write(line);
             bWriter.flush();
         }
         catch(Exception ex){
-            throw ex;
+            this.close();
+            if(handler != null) handler.onClose();
+            return false;
         }
+        return true;
     }
 
     public void addEventHandler(LineSocketEventHandler handler){
