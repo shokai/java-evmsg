@@ -17,12 +17,9 @@ public class ClientSample{
                     System.exit(0);
                 }
             });
-        try{
-            sock.connect();
-        }
-        catch(Exception ex){
-            ex.printStackTrace();
-        }
+        
+
+        sock.connect();
 
         int count = 5;
         while(true){

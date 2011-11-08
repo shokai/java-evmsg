@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.ConnectException;
 
 public class LineSocket{
     private String host;
@@ -17,7 +18,7 @@ public class LineSocket{
         this.port = port;
     }
 
-    public void connect() throws Exception{
+    public boolean connect(){
         try{
             this.sock = new Socket(host, port);
             this.bWriter = new BufferedWriter(new OutputStreamWriter(this.sock.getOutputStream()));
@@ -48,9 +49,16 @@ public class LineSocket{
                 }
             }.start();
         }
+        catch(ConnectException ex){
+            if(handler != null) handler.onClose();
+            return false;
+        }
         catch(Exception ex){
-            throw ex;
-        }        
+            this.close();
+            if(handler != null) handler.onClose();
+            return false;
+        }
+        return true;
     }
 
     public void close(){
