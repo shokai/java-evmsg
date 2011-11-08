@@ -4,7 +4,10 @@ import java.net.*;
 public class ClientSample{
 
     public static void main(String args[]){
+        // initialize
         LineSocket sock = new LineSocket("localhost", 8082);
+
+        // add handler - onMessage, onOpen, onClose
         sock.addEventHandler(new LineSocketEventHandler(){
                 public void onMessage(String line){
                     System.out.println(" > "+line);
@@ -17,10 +20,11 @@ public class ClientSample{
                     System.exit(0);
                 }
             });
-        
 
+        // connect
         sock.connect();
 
+        // send
         int count = 5;
         while(true){
             try{
