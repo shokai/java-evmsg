@@ -99,7 +99,7 @@ public class LineSocket{
     
     public boolean send(String line){
         try{
-            bWriter.write(line);
+            bWriter.write(line+"\n");
             bWriter.flush();
         }
         catch(Exception ex){
