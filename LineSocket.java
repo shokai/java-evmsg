@@ -18,10 +18,30 @@ public class LineSocket{
         this.port = port;
     }
 
+    public LineSocket(Socket connected_sock){
+        if(!connected_sock.isConnected()) return;
+        this.sock = connected_sock;
+        this.run();
+    }
+
     public boolean connect(){
-        this.closer = false;
+        if(this.sock != null) return false;
         try{
             this.sock = new Socket(host, port);
+        }
+        catch(ConnectException ex){
+            if(handler != null) handler.onClose();
+            return false;
+        }
+        catch(Exception ex){
+            return false;
+        }
+        return this.run();
+    }
+
+    public boolean run(){
+        this.closer = false;
+        try{
             this.bWriter = new BufferedWriter(new OutputStreamWriter(this.sock.getOutputStream()));
             this.iReader = new InputStreamReader(this.sock.getInputStream());
             this.bReader = new BufferedReader(this.iReader);
@@ -69,6 +89,7 @@ public class LineSocket{
             bWriter.close();
             iReader.close();
             sock.close();
+            sock = null;
             if(handler != null) handler.onClose();
         }
         catch(Exception ex){
