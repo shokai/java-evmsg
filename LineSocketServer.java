@@ -27,7 +27,6 @@ public class LineSocketServer{
             public void run(){
                 while(!closer){
                     try{
-                        Thread.sleep(100);
                         LineSocket sock = new LineSocket(server.accept());
                         clients.add(sock);
                         final int cid = clients.size()-1; // client id
