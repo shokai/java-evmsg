@@ -93,11 +93,11 @@ public class LineSocket{
             if(handler != null) handler.onClose();
         }
         catch(Exception ex){
-            ex.printStackTrace();
         }
     }
     
     public boolean send(String line){
+        if(sock == null) return false;
         try{
             bWriter.write(line+"\n");
             bWriter.flush();
