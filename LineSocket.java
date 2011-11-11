@@ -45,7 +45,7 @@ public class LineSocket{
                     try{
                         Thread.sleep(100);
                         String line = bReader.readLine();
-                        if(line != null){
+                        if(line != null && line.length() > 0){
                             if(handler != null) handler.onMessage(line);
                         }
                     }

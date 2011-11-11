@@ -51,6 +51,21 @@ public class LineSocketServer{
                 }
             }
         }.start();
+
+        new Thread(){
+            public void run(){
+                while(true){
+                    try{
+                        Thread.sleep(20000);
+                    }
+                    catch(Exception ex){
+                    }
+                    for(LineSocket sock : clients){
+                        sock.send("");
+                    }
+                }
+            }
+        }.start();
     }
 
     public LineSocket getClient(int id){
