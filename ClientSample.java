@@ -2,7 +2,7 @@ public class ClientSample{
 
     public static void main(String args[]){
         // initialize
-        LineSocket sock = new LineSocket("localhost", 8082);
+        LineSocket sock = new LineSocket("localhost", 5000);
         final LineSocket that_sock = sock;
 
         // add handler - onMessage, onOpen, onClose

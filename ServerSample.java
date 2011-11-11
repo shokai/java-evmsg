@@ -2,7 +2,9 @@ public class ServerSample{
 
     public static void main(String args[]){
         // initialize
-        LineSocketServer server = new LineSocketServer(8082);
+        int port = 5000;
+        LineSocketServer server = new LineSocketServer(port);
+        System.out.println("linesocket server start - port:"+port);
         
         // add event listener
         final LineSocketServer that_server = server;

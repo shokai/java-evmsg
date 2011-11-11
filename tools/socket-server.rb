@@ -4,7 +4,7 @@ require 'eventmachine'
 require 'ArgsParser'
 
 parser = ArgsParser.parser
-parser.bind(:port, :p, 'port', 8082)
+parser.bind(:port, :p, 'port', 5000)
 parser.bind(:help, :h, 'show help')
 
 first, params = parser.parse(ARGV)
