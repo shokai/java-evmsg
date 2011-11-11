@@ -9,6 +9,7 @@ public class LineSocketServer{
     private ServerSocket server;
     private LineSocketServerEventHandler handler;
     private ArrayList<LineSocket> clients;
+    public ArrayList<LineSocket> getClients(){ return clients; }
     private boolean closer = false;
 
     public LineSocketServer(int port){
@@ -18,42 +19,44 @@ public class LineSocketServer{
             server = new ServerSocket(port);
         }
         catch(Exception ex){
-            ex.printStackTrace();
         }
     }
 
     public void listen(){
-        while(!closer){
-            try{
-                Thread.sleep(100);
-                LineSocket sock = new LineSocket(server.accept());
-                clients.add(sock);
-                final int cid = clients.size()-1; // client id
-                handler.onAccept(cid);
-                if(handler != null){
-                    sock.addEventHandler(new LineSocketEventHandler(){
-                            public void onMessage(String line){
-                                handler.onMessage(cid, line);
-                            }
-                            public void onOpen(){
-                            }
-                            public void onClose(){
-                                handler.onClose(cid);
-                            }
-                        });
+        new Thread(){
+            public void run(){
+                while(!closer){
+                    try{
+                        Thread.sleep(100);
+                        LineSocket sock = new LineSocket(server.accept());
+                        clients.add(sock);
+                        final int cid = clients.size()-1; // client id
+                        handler.onAccept(cid);
+                        if(handler != null){
+                            sock.addEventHandler(new LineSocketEventHandler(){
+                                    public void onMessage(String line){
+                                        handler.onMessage(cid, line);
+                                    }
+                                    public void onOpen(){
+                                    }
+                                    public void onClose(){
+                                        handler.onClose(cid);
+                                    }
+                                });
+                        }
+                        sock.run();
+                    }
+                    catch(Exception ex){
+                    }
                 }
-                sock.run();
             }
-            catch(Exception ex){
-                ex.printStackTrace();
-            }
-        }
+        }.start();
     }
 
     public LineSocket getClient(int id){
         return clients.get(id);
     }
-    
+
     public void close(){
         closer = true;
         try{
@@ -63,7 +66,6 @@ public class LineSocketServer{
             }
         }
         catch(Exception ex){
-            ex.printStackTrace();
         }
     }
 

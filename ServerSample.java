@@ -20,5 +20,23 @@ public class ServerSample{
             });
         
         server.listen();
+        
+        new Thread(){
+            public void run(){
+                while(true){
+                    try{
+                        String msg = new java.util.Date().toString();
+                        System.out.println("<broadcast> "+msg);
+                        for(LineSocket sock : that_server.getClients()){
+                            if(sock.send(msg)) Thread.sleep(10);
+                        }
+                        Thread.sleep(10000);
+                    }
+                    catch(Exception ex){
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        }.start();
     }
 }
