@@ -33,7 +33,7 @@ public class ServerSample{
                         String msg = new java.util.Date().toString();
                         System.out.println("<broadcast> "+msg);
                         for(LineSocket sock : that_server.getClients()){
-                            if(sock.send(msg)) Thread.sleep(10);
+                            sock.send(msg);
                         }
                     }
                     catch(Exception ex){
