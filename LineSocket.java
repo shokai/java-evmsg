@@ -7,6 +7,9 @@ public class LineSocket{
     private String host;
     private int port;
     private Socket sock;
+    private int readInterval;
+    public int getReadInterval(){ return readInterval; }
+    public void setReadInterval(int msec){ this.readInterval = msec; }
     private BufferedWriter bWriter;
     private BufferedReader bReader;
     private InputStreamReader iReader;
@@ -43,7 +46,7 @@ public class LineSocket{
             public void run(){
                 while(!closer){
                     try{
-                        Thread.sleep(100);
+                        Thread.sleep(readInterval);
                         String line = bReader.readLine();
                         if(line != null && line.length() > 0){
                             if(handler != null) handler.onMessage(line);

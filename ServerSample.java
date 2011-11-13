@@ -15,6 +15,7 @@ public class ServerSample{
                 }
                 public void onAccept(int client_id){
                     System.out.println("* <"+client_id+"> connection accepted");
+                    that_server.setReadInterval(100 + that_server.getClients().size()*10);
                 }
                 public void onClose(int client_id){
                     System.out.println("* <"+client_id+"> closed");

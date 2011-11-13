@@ -11,6 +11,14 @@ public class LineSocketServer{
     private ArrayList<LineSocket> clients;
     public ArrayList<LineSocket> getClients(){ return clients; }
     private boolean closer = false;
+    private int readInterval;
+    public int getReadInterval(){ return readInterval; }
+    public void setReadInterval(int msec){
+        this.readInterval = msec;
+        for(LineSocket sock : clients){
+            sock.setReadInterval(msec);
+        }
+    }
 
     public LineSocketServer(int port){
         if(server != null && !server.isClosed()) return;
