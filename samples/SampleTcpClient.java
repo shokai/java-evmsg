@@ -1,12 +1,17 @@
-public class ClientSample{
+package samples;
+
+import org.shokai.evmsg.TcpClient;
+import org.shokai.evmsg.TcpClientEventHandler;
+
+public class SampleTcpClient{
 
     public static void main(String args[]){
         // initialize
-        LineSocket sock = new LineSocket("localhost", 5000);
-        final LineSocket that_sock = sock;
+        TcpClient sock = new TcpClient("localhost", 5000);
+        final TcpClient that_sock = sock;
 
         // add handler - onMessage, onOpen, onClose
-        sock.addEventHandler(new LineSocketEventHandler(){
+        sock.addEventHandler(new TcpClientEventHandler(){
                 public void onMessage(String line){
                     System.out.println(" > "+line);
                 }

@@ -1,9 +1,14 @@
-public class UdpSample{
+package samples;
+
+import org.shokai.evmsg.Udp;
+import org.shokai.evmsg.UdpEventHandler;
+
+public class SampleUdp{
 
     public static void main(String args[]){
-        UdpLineSocket sock = new UdpLineSocket("localhost", 5001);
+        Udp sock = new Udp("localhost", 5001);
 
-        sock.addEventHandler(new UdpLineSocketEventHandler(){
+        sock.addEventHandler(new UdpEventHandler(){
                 public void onMessage(String host, int port, String line){
                     System.out.println("<"+host+":"+port+"> "+line);
                 }

@@ -1,9 +1,11 @@
+package org.shokai.evmsg;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.ConnectException;
 
-public class LineSocket{
+public class TcpClient{
     private String host;
     private int port;
     private Socket sock;
@@ -13,15 +15,15 @@ public class LineSocket{
     private BufferedWriter bWriter;
     private BufferedReader bReader;
     private InputStreamReader iReader;
-    private LineSocketEventHandler handler;
+    private TcpClientEventHandler handler;
     private boolean closer = false;
 
-    public LineSocket(String host, int port){
+    public TcpClient(String host, int port){
         this.host = host;
         this.port = port;
     }
 
-    public LineSocket(Socket connected_socket){
+    public TcpClient(Socket connected_socket){
         this.sock = connected_socket;
     }
 
@@ -41,7 +43,7 @@ public class LineSocket{
             if(handler != null) handler.onClose();
             return false;
         }
-        final LineSocket that = this;
+        final TcpClient that = this;
         new Thread(){
             public void run(){
                 while(!closer){
@@ -113,7 +115,7 @@ public class LineSocket{
         return true;
     }
 
-    public void addEventHandler(LineSocketEventHandler handler){
+    public void addEventHandler(TcpClientEventHandler handler){
         this.handler = handler;
     }
 

@@ -1,3 +1,5 @@
+package org.shokai.evmsg;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -5,18 +7,18 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.ConnectException;
 
-public class UdpLineSocket{
+public class Udp{
     private InetSocketAddress addr;
     private DatagramSocket sock;
-    private UdpLineSocketEventHandler handler;
+    private UdpEventHandler handler;
     private boolean closer;
     private int myPort = 0;
 
-    public UdpLineSocket(String host, int port){
+    public Udp(String host, int port){
         this.addr = new InetSocketAddress(host, port);
         run();
     }
-    public UdpLineSocket(String host, int port, int myPort){
+    public Udp(String host, int port, int myPort){
         this.myPort = myPort;
         this.addr = new InetSocketAddress(host, port);
         run();
@@ -69,7 +71,7 @@ public class UdpLineSocket{
         this.sock.close();
     }
 
-    public void addEventHandler(UdpLineSocketEventHandler handler){
+    public void addEventHandler(UdpEventHandler handler){
         this.handler = handler;
     }
 
