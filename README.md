@@ -75,6 +75,9 @@ UDP
 Run Samples
 ===========
 
+build
+-----
+
     % javac org/shokai/evmsg/*.java
     % javac samples/*.java
 
