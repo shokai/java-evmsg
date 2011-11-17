@@ -34,6 +34,8 @@ TCP Server
         });
     
     server.listen();
+    
+    server.close();
 
 
 TCP Client
@@ -56,7 +58,8 @@ TCP Client
         });
     
     sock.send("hello!!");
-
+    
+    sock.close();
 
 UDP
 ---
@@ -70,7 +73,8 @@ UDP
         });
 
     sock.send("hello!!");
-
+    
+    sock.close();
 
 Run Samples
 ===========
