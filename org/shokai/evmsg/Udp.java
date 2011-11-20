@@ -11,8 +11,10 @@ public class Udp{
     private InetSocketAddress addr;
     private DatagramSocket sock;
     private UdpEventHandler handler;
-    private boolean closer;
     private int myPort = 0;
+    
+    public String getHost(){ return this.addr.getHostName(); }
+    public int getPort(){ return this.addr.getPort(); }
 
     public Udp(String host, int port){
         this.addr = new InetSocketAddress(host, port);
@@ -26,26 +28,26 @@ public class Udp{
 
     public void run(){
         new Thread(){
-            public void run(){
+            public void run() {
                 byte[] buf = new byte[1024];
-                while(!closer){
-                    if(sock != null){
-                        try{
-                            DatagramPacket pkt = new DatagramPacket(buf, buf.length);
-                            sock.receive(pkt);
-                            if(pkt.getLength() > 0){
-                                String data = new String(pkt.getData(),0, pkt.getLength());
-                                if(handler!=null){
-                                    handler.onMessage(pkt.getAddress().getHostAddress(), pkt.getPort(), data);
-                                }
+                try {
+                    while (true) {
+                        DatagramPacket pkt = new DatagramPacket(buf, buf.length);
+                        sock.receive(pkt);
+                        if (pkt.getLength() > 0) {
+                            String data = new String(pkt.getData(), 0, pkt.getLength());
+                            if (handler != null) {
+                                handler.onMessage(pkt.getAddress().getHostAddress(),
+                                        pkt.getPort(), data);
                             }
-                            Thread.sleep(100);
                         }
-                        catch(Exception ex){
-                            ex.printStackTrace();
-                        }
+                        Thread.sleep(100);
                     }
                 }
+                catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
             }
         }.start();
     }
@@ -67,7 +69,6 @@ public class Udp{
     }
 
     public void close(){
-        this.closer = true;
         this.sock.close();
     }
 

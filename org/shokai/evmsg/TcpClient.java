@@ -16,7 +16,6 @@ public class TcpClient{
     private BufferedReader bReader;
     private InputStreamReader iReader;
     private TcpClientEventHandler handler;
-    private boolean closer = false;
 
     public TcpClient(String host, int port){
         this.host = host;
@@ -28,7 +27,6 @@ public class TcpClient{
     }
 
     public boolean run(){
-        this.closer = false;
         try{
             this.bWriter = new BufferedWriter(new OutputStreamWriter(this.sock.getOutputStream()));
             this.iReader = new InputStreamReader(this.sock.getInputStream());
@@ -45,24 +43,24 @@ public class TcpClient{
         }
         final TcpClient that = this;
         new Thread(){
-            public void run(){
-                while(!closer){
-                    try{
+            public void run() {
+                try {
+                    while (true) {
                         Thread.sleep(readInterval);
                         String line = bReader.readLine();
-                        if(line != null && line.length() > 0){
-                            if(handler != null) handler.onMessage(line);
+                        if (line != null && line.length() > 0) {
+                            if (handler != null) handler.onMessage(line);
                         }
                     }
-                    catch(SocketException ex){
-                        that.close();
-                    }
-                    catch(IOException ex){
-                        that.close();
-                    }
-                    catch(Exception ex){
-                        that.close();
-                    }
+                }
+                catch (SocketException ex) {
+                    that.close();
+                }
+                catch (IOException ex) {
+                    that.close();
+                }
+                catch (Exception ex) {
+                    that.close();
                 }
             }
         }.start();
@@ -89,10 +87,8 @@ public class TcpClient{
 
     public void close(){
         try{
-            closer = true;
-            bReader.close();
-            bWriter.close();
-            iReader.close();
+            sock.shutdownInput();
+            sock.shutdownOutput();
             sock.close();
             sock = null;
             if(handler != null) handler.onClose();
