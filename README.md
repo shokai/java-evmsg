@@ -35,8 +35,6 @@ TCP Server
     
     server.listen();
     
-    server.close();
-
 
 TCP Client
 ----------
@@ -56,7 +54,7 @@ TCP Client
                 System.out.println("* socket closed");
             }
         });
-    
+    sock.connect();
     sock.send("hello!!");
     
     sock.close();
